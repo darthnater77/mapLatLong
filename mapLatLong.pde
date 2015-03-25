@@ -1,27 +1,29 @@
 Converter data;
+PImage map;
 String [] mapData, hold;
 StringList chains;
 float [][] points;
 
 float phi0 = 0;
-float lambda0 = radians(-96);
-float phi1 = radians(29.5f);
-float phi2 = radians(45.5f);
+float lambda0 = radians(-69);
+float phi1 = radians(47.5f);
+float phi2 = radians(43f);
 int current;
 float minX, maxX, minY, maxY;
 
 void setup(){
-  size(450,600);
+  size(370,600);
+  map = loadImage("maine.png");
   current = 0;
   phi0 = 0;
   lambda0 = radians(-69);
   phi1 = radians(43f);
   phi2 = radians(47.5f);
   
-  minX = calcX(48, -72);
-  minY = calcY(48, -72);
-  maxX = calcX(43.5, -66);
-  maxY = calcY(43.5, -66);
+  minX = calcX(48, -71.2);
+  minY = calcY(48, -71.2);
+  maxX = calcX(42.5, -66.75);
+  maxY = calcY(42.5, -66.75);
   
   setupArrays();
 }
@@ -46,10 +48,11 @@ void setupArrays(){
 void draw(){
   background(175);
   fill(0);
-  stroke(0);
+  noStroke();
   textAlign(CENTER, CENTER);
   
   drawNames();
+  image(map,0,0);
   allPoints();
 }
 
@@ -58,10 +61,11 @@ void drawNames(){
   for (int i = 0; i < chains.size(); i++){
     if (mouseX > i*position && mouseX < (i+.9)*position &&  mouseY > height-50)
       current = i+1;
-    if (current == i+1)
-      fill(0,0,255);
-    else
+    if (current == i+1){
+      fill(255);
+      rect(i*position, height-40, position, 40);
       fill(0);
+    }
     text(chains.get(i), i*position, height-30, position, 20);
   }
   if (mouseY< height-50)
@@ -72,14 +76,14 @@ void allPoints(){
   boolean check = false;
   if (current == 0){
     check = true;
-    stroke(255,0,0);
+    fill(255,0,0);
   }
   for (int i = 0; i < points.length; i++){
     if(check == false){
       if (points[i][2] == current)
-        stroke(0,0,255);
+        fill(0,0,255);
       else
-        stroke(0,255,0);
+        fill(0,255,0);
     }
     drawPoint(points[i][0], points[i][1]);
   }
