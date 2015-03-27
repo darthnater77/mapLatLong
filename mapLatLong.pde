@@ -1,35 +1,36 @@
-Converter data;
 PImage map;
 String [] mapData, hold;
 StringList chains;
 float [][] points;
+boolean [] checks;
 
 float phi0 = 0;
 float lambda0 = radians(-69);
 float phi1 = radians(47.5f);
 float phi2 = radians(43f);
-int current;
-float minX, maxX, minY, maxY;
+float minX, maxX, minY, maxY, position;
 
 void setup(){
-  size(370,600);
+  size(375,600);
   map = loadImage("maine.png");
-  current = 0;
   phi0 = 0;
   lambda0 = radians(-69);
   phi1 = radians(43f);
   phi2 = radians(47.5f);
   
-  minX = calcX(48, -71.2);
-  minY = calcY(48, -71.2);
-  maxX = calcX(42.5, -66.75);
-  maxY = calcY(42.5, -66.75);
+  minX = calcX(47.467424, -71.25);
+  minY = calcY(47.467424, -71.25);
+  maxX = calcX(43.066681, -66.963355);
+  maxY = calcY(43.066681, -66.963355);
   
   setupArrays();
+  checks = new boolean[chains.size()];
+  for (int i = 0; i < checks.length; i++)
+    checks[i] = false;
 }
 
 void setupArrays(){
-  int count = 0;
+  int count = -1;
   chains =  new StringList();
   mapData = loadStrings("LatLong.tsv");
   points = new float[mapData.length][3];
@@ -43,6 +44,7 @@ void setupArrays(){
     points[i][1] = calcY(float(hold[0]), float(hold[1]));
     points[i][2] = count;
   }
+  position = width/chains.size();
 }
 
 void draw(){
@@ -57,42 +59,29 @@ void draw(){
 }
 
 void drawNames(){
-  float position = width/chains.size();
   for (int i = 0; i < chains.size(); i++){
-    if (mouseX > i*position && mouseX < (i+.9)*position &&  mouseY > height-50)
-      current = i+1;
-    if (current == i+1){
+    if (checks[i] == true){
       fill(255);
       rect(i*position, height-40, position, 40);
       fill(0);
     }
     text(chains.get(i), i*position, height-30, position, 20);
   }
-  if (mouseY< height-50)
-    current = 0;
 }
 
 void allPoints(){
-  boolean check = false;
-  if (current == 0){
-    check = true;
-    fill(255,0,0);
-  }
   for (int i = 0; i < points.length; i++){
-    if(check == false){
-      if (points[i][2] == current)
-        fill(0,0,255);
-      else
-        fill(0,255,0);
+    if(checks[int(points[i][2])] == true){
+      fill(255,0,0);
+      drawPoint(points[i][0], points[i][1]);
     }
-    drawPoint(points[i][0], points[i][1]);
   }
 }
 
 void drawPoint(float x, float y){
   float lat, lon;
   lat = map(x, minX, maxX, 0, width);
-  lon = map(y, minY, maxY, 0, height);
+  lon = map(y, minY, maxY, 0, height-50);
   ellipse(lat, lon, 5, 5);
 }
 
@@ -124,6 +113,14 @@ float calcY(float lat, float lon){
   return y;
 }
 
+void mousePressed(){
+  for (int i = 0; i < chains.size(); i++){
+    if (mouseX > i*position && mouseX < (i+.9)*position &&  mouseY > height-50)
+      checks[i] = !checks[i];
+  }
+}
 
-// Source; https://www.google.com/fusiontables/DataSource?docid=1HDRk5AjNoPCShwERz_bjyKVGDapFmQil4hl9eMM
+
+// Source: https://www.google.com/fusiontables/DataSource?docid=1HDRk5AjNoPCShwERz_bjyKVGDapFmQil4hl9eMM
 // Source: https://www.google.com/fusiontables/DataSource?docid=1mJ7YnPH8QkRb0u8cTV0eMjnLjFdUQMNm50F-nYB9#rows:id=1
+// Other Ideas: Subway, Wendy's, KFC, Arby's, Taco Bell
