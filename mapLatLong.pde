@@ -3,6 +3,7 @@ String [] mapData, hold;
 StringList chains;
 float [][] points;
 boolean [] checks;
+color [] colors;
 
 float phi0 = 0;
 float lambda0 = radians(-69);
@@ -27,6 +28,7 @@ void setup(){
   checks = new boolean[chains.size()];
   for (int i = 0; i < checks.length; i++)
     checks[i] = false;
+  setupColors();
 }
 
 void setupArrays(){
@@ -47,6 +49,17 @@ void setupArrays(){
   position = width/chains.size();
 }
 
+void setupColors(){
+  int r, g, b;
+  colors = new color[chains.size()];
+  for (int i = 0; i < colors.length; i++){
+    r = int(random(255));
+    g = int(random(255));
+    b = int(random(255));
+    colors[i] = color(r,g,b);
+  }
+}
+
 void draw(){
   background(175);
   fill(0);
@@ -61,7 +74,7 @@ void draw(){
 void drawNames(){
   for (int i = 0; i < chains.size(); i++){
     if (checks[i] == true){
-      fill(255);
+      fill(colors[i]);
       rect(i*position, height-40, position, 40);
       fill(0);
     }
@@ -72,7 +85,7 @@ void drawNames(){
 void allPoints(){
   for (int i = 0; i < points.length; i++){
     if(checks[int(points[i][2])] == true){
-      fill(255,0,0);
+      fill(colors[int(points[i][2])]);
       drawPoint(points[i][0], points[i][1]);
     }
   }
