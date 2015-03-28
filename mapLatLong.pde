@@ -12,7 +12,7 @@ float phi2 = radians(43f);
 float minX, maxX, minY, maxY, position;
 
 void setup(){
-  size(375,600);
+  size(475,563);
   map = loadImage("maine.png");
   phi0 = 0;
   lambda0 = radians(-69);
@@ -46,7 +46,7 @@ void setupArrays(){
     points[i][1] = calcY(float(hold[0]), float(hold[1]));
     points[i][2] = count;
   }
-  position = width/chains.size();
+  position = height/chains.size();
 }
 
 void setupColors(){
@@ -67,7 +67,9 @@ void draw(){
   textAlign(CENTER, CENTER);
   
   drawNames();
-  image(map,0,0);
+  image(map,0,0);  
+  text("Select All", width/2-20, height-20);
+  text("Deselect All", width/2+85, height-20);
   allPoints();
 }
 
@@ -75,17 +77,17 @@ void drawNames(){
   for (int i = 0; i < chains.size(); i++){
     if (checks[i] == true){
       fill(colors[i]);
-      rect(i*position, height-40, position, 40);
+      rect(375, position*i, width-375, position);
       fill(0);
     }
-    text(chains.get(i), i*position, height-30, position, 20);
+    text(chains.get(i), 375, position*i, width-375, position);
   }
 }
 
 void allPoints(){
   for (int i = 0; i < points.length; i++){
     if(checks[int(points[i][2])] == true){
-      fill(colors[int(points[i][2])]);
+      fill(colors[int(points[i][2])], 150);
       drawPoint(points[i][0], points[i][1]);
     }
   }
@@ -93,8 +95,8 @@ void allPoints(){
 
 void drawPoint(float x, float y){
   float lat, lon;
-  lat = map(x, minX, maxX, 0, width);
-  lon = map(y, minY, maxY, 0, height-50);
+  lat = map(x, minX, maxX, 0, width-100);
+  lon = map(y, minY, maxY, 0, height);
   ellipse(lat, lon, 5, 5);
 }
 
@@ -128,12 +130,21 @@ float calcY(float lat, float lon){
 
 void mousePressed(){
   for (int i = 0; i < chains.size(); i++){
-    if (mouseX > i*position && mouseX < (i+.9)*position &&  mouseY > height-50)
+    if (mouseY > i*position && mouseY < (i+.9)*position &&  mouseX > 375)
       checks[i] = !checks[i];
+  }
+  
+  if(mouseY > height-30 && mouseX <  width/2+30 && mouseX > width/2-20){
+    for (int i = 0; i < checks.length; i++)
+      checks[i] = true;
+  }
+  
+  if(mouseY > height-30 && mouseX < 375 && mouseX > width/2+30){
+    for (int i = 0; i < checks.length; i++)
+      checks[i] = false;
   }
 }
 
 
 // Source: https://www.google.com/fusiontables/DataSource?docid=1HDRk5AjNoPCShwERz_bjyKVGDapFmQil4hl9eMM
 // Source: https://www.google.com/fusiontables/DataSource?docid=1mJ7YnPH8QkRb0u8cTV0eMjnLjFdUQMNm50F-nYB9#rows:id=1
-// Other Ideas: Subway, Wendy's, KFC, Arby's, Taco Bell
