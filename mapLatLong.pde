@@ -27,7 +27,7 @@ void setup(){
   setupArrays();
   checks = new boolean[chains.size()];
   for (int i = 0; i < checks.length; i++)
-    checks[i] = false;
+    checks[i] = true;
   setupColors();
 }
 
@@ -53,41 +53,63 @@ void setupColors(){
   int r, g, b;
   colors = new color[chains.size()];
   for (int i = 0; i < colors.length; i++){
-    r = int(random(255));
-    g = int(random(255));
-    b = int(random(255));
+    r = int(random(50,255));
+    g = int(random(50,255));
+    b = int(random(50,255));
     colors[i] = color(r,g,b);
   }
 }
 
 void draw(){
-  background(175);
+  background(255);
   fill(0);
   noStroke();
   textAlign(CENTER, CENTER);
   
   drawNames();
   image(map,0,0);  
-  text("Select All", width/2-20, height-20);
-  text("Deselect All", width/2+85, height-20);
+  drawButtons();
   allPoints();
 }
 
 void drawNames(){
+  int opacity = 255;
+  color c = color(0);
   for (int i = 0; i < chains.size(); i++){
+    if (mouseY > i*position && mouseY < (i+.9)*position &&  mouseX > 375){
+      opacity = 150;
+      c = color(255,0,0);
+    }
     if (checks[i] == true){
-      fill(colors[i]);
-      rect(375, position*i, width-375, position);
+      fill(colors[i], opacity);
+      rect(375, position*i, width-375, position, 10);
+      fill(255);
+      rect(380, position*i+25, width-385, position-50, 20);
       fill(0);
     }
+    fill(c);
     text(chains.get(i), 375, position*i, width-375, position);
+  c = color(0);
+  opacity = 255;
   }
+}
+
+void drawButtons(){
+  fill(0);
+  if(mouseY > height-30 && mouseX <  width/2+30 && mouseX > width/2-50)
+    fill(255,0,0);
+  text("Select All", width/2-20, height-20);
+  fill(0);
+  if(mouseY > height-30 && mouseX < 375 && mouseX > width/2+30)
+    fill(255,0,0);
+  text("Deselect All", width/2+85, height-20);
+  
 }
 
 void allPoints(){
   for (int i = 0; i < points.length; i++){
     if(checks[int(points[i][2])] == true){
-      fill(colors[int(points[i][2])], 150);
+      fill(colors[int(points[i][2])], 200);
       drawPoint(points[i][0], points[i][1]);
     }
   }
@@ -97,7 +119,7 @@ void drawPoint(float x, float y){
   float lat, lon;
   lat = map(x, minX, maxX, 0, width-100);
   lon = map(y, minY, maxY, 0, height);
-  ellipse(lat, lon, 5, 5);
+  ellipse(lat, lon, 3, 3);
 }
 
 float calcX(float lat, float lon){
@@ -134,7 +156,7 @@ void mousePressed(){
       checks[i] = !checks[i];
   }
   
-  if(mouseY > height-30 && mouseX <  width/2+30 && mouseX > width/2-20){
+  if(mouseY > height-30 && mouseX <  width/2+30 && mouseX > width/2-50){
     for (int i = 0; i < checks.length; i++)
       checks[i] = true;
   }
