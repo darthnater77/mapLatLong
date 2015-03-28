@@ -74,22 +74,18 @@ void draw(){
 
 void drawNames(){
   int opacity = 255;
-  color c = color(0);
   for (int i = 0; i < chains.size(); i++){
     if (mouseY > i*position && mouseY < (i+.9)*position &&  mouseX > 375){
       opacity = 150;
-      c = color(255,0,0);
     }
-    if (checks[i] == true){
+    if (checks[i] == true || opacity != 255){
       fill(colors[i], opacity);
-      rect(375, position*i, width-375, position, 10);
+      rect(375, position*i, width-375, position+int((i+1)/checks.length)*3, 10);
       fill(255);
       rect(380, position*i+25, width-385, position-50, 20);
       fill(0);
     }
-    fill(c);
     text(chains.get(i), 375, position*i, width-375, position);
-  c = color(0);
   opacity = 255;
   }
 }
