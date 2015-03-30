@@ -103,19 +103,30 @@ void drawButtons(){
 }
 
 void allPoints(){
+  int opacity = 200;
+  int spot;
+  for (int i = 0; i < points.length; i++){
+    spot = int(points[i][2]);
+    if (mouseY > spot*position && mouseY < (spot+.9)*position &&  mouseX > 375 && checks[spot] == true){
+      opacity = 255;
+      fill(colors[int(points[i][2])], opacity);
+      drawPoint(points[i][0], points[i][1], 5);
+      opacity = 25;
+    }
+  }
   for (int i = 0; i < points.length; i++){
     if(checks[int(points[i][2])] == true){
-      fill(colors[int(points[i][2])], 200);
-      drawPoint(points[i][0], points[i][1]);
+      fill(colors[int(points[i][2])], opacity);
+      drawPoint(points[i][0], points[i][1], 3);
     }
   }
 }
 
-void drawPoint(float x, float y){
+void drawPoint(float x, float y, float r){
   float lat, lon;
   lat = map(x, minX, maxX, 0, width-100);
   lon = map(y, minY, maxY, 0, height);
-  ellipse(lat, lon, 3, 3);
+  ellipse(lat, lon, r, r);
 }
 
 float calcX(float lat, float lon){
